@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Local / Link</th>
+                <th>Data</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evento in eventos %}
+            <tr>
+                <td>{{ evento.nome }}</td>
+                <td>{{ evento.categoria.nome }}</td>
+                
+                {% comment %} {% if evento.local %}
+                    <td>{{ evento.local }}</td>
+                {% elif evento.link %}
+                    <td>{{ evento.link }}</td>
+                {% endif %} {% endcomment %}
+
+                {% comment %} --- OU --- {% endcomment %}
+
+                <td>{% firstof evento.local evento.link %}</td> {% comment %} Mostre para mim o primeiro destes elementos que não forem um valor False {% endcomment %}
+                
+                <td>
+                    {% if evento.data %}  {% comment %} Caso não tenha data definida {% endcomment %}
+                        {{ evento.data | date:"d/m/Y" }} {% comment %} No formato d/m/Y {% endcomment %}
+                    {% else %}
+                        A definir
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'exibir_evento' id=evento.id %}">Ver detalhes</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
